@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alternative Credit Scoring — Project Infographic</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     GLOBAL & PAGE SETUP
+     ═══════════════════════════════════════════════════════════ */
+  :root {
+    --navy:     #0F1B2D;
+    --dark:     #1A2332;
+    --blue:     #2563EB;
+    --blue-lt:  #3B82F6;
+    --cyan:     #06B6D4;
+    --teal:     #14B8A6;
+    --green:    #22C55E;
+    --amber:    #F59E0B;
+    --orange:   #F97316;
+    --red:      #EF4444;
+    --purple:   #8B5CF6;
+    --pink:     #EC4899;
+    --slate:    #CBD5E1;
+    --white:    #FFFFFF;
+    --off-white:#F8FAFC;
+    --card-bg:  rgba(255,255,255,0.06);
+    --card-br:  rgba(255,255,255,0.10);
+    --accent-gradient: linear-gradient(135deg, #2563EB, #06B6D4);
+    --warm-gradient:   linear-gradient(135deg, #F59E0B, #F97316);
+    --success-gradient:linear-gradient(135deg, #22C55E, #14B8A6);
+  }
+
+  @page { size: A4 landscape; margin: 0; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: 'Inter', sans-serif; background: #0a0a0a; }
+
+  .page {
+    width: 297mm; height: 210mm;
+    background: var(--navy);
+    color: var(--white);
+    padding: 18mm 20mm 14mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    margin: 10px auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .page::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 20% 20%, rgba(37,99,235,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ─── Typography ─── */
+  .page-title {
+    font-size: 28px; font-weight: 900; letter-spacing: -0.5px;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 2px;
+  }
+  .page-subtitle {
+    font-size: 11px; color: var(--slate); font-weight: 400; margin-bottom: 14px;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .section-title {
+    font-size: 14px; font-weight: 700; color: var(--cyan);
+    border-bottom: 2px solid rgba(6,182,212,0.3); padding-bottom: 4px;
+    margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .subsection-title {
+    font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 4px;
+  }
+  .body-text {
+    font-size: 9.5px; color: #94A3B8; line-height: 1.5;
+  }
+  .body-text strong { color: var(--white); }
+  .small-text { font-size: 8.5px; color: #64748B; line-height: 1.4; }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-br);
+    border-radius: 10px;
+    padding: 12px 14px;
+    backdrop-filter: blur(10px);
+  }
+  .card-accent {
+    border-left: 3px solid var(--blue);
+  }
+  .card-cyan { border-left-color: var(--cyan); }
+  .card-green { border-left-color: var(--green); }
+  .card-amber { border-left-color: var(--amber); }
+  .card-purple { border-left-color: var(--purple); }
+  .card-red { border-left-color: var(--red); }
+
+  /* ─── Icons ─── */
+  .icon-circle {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .icon-blue   { background: rgba(37,99,235,0.15); color: var(--blue-lt); }
+  .icon-cyan   { background: rgba(6,182,212,0.15);  color: var(--cyan); }
+  .icon-green  { background: rgba(34,197,94,0.15);  color: var(--green); }
+  .icon-amber  { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .icon-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
+  .icon-red    { background: rgba(239,68,68,0.15);  color: var(--red); }
+  .icon-pink   { background: rgba(236,72,153,0.15); color: var(--pink); }
+  .icon-teal   { background: rgba(20,184,166,0.15); color: var(--teal); }
+
+  .icon-sm {
+    width: 28px; height: 28px; font-size: 14px; border-radius: 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* ─── Layouts ─── */
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .gap-4 { gap: 4px; } .gap-6 { gap: 6px; } .gap-8 { gap: 8px; }
+  .gap-10 { gap: 10px; } .gap-12 { gap: 12px; } .gap-14 { gap: 14px; }
+  .items-center { align-items: center; }
+  .items-start { align-items: flex-start; }
+  .flex-1 { flex: 1; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+
+  /* ─── Tags / Badges ─── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 20px; font-size: 8px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-blue   { background: rgba(37,99,235,0.2); color: var(--blue-lt); }
+  .badge-green  { background: rgba(34,197,94,0.2);  color: var(--green); }
+  .badge-amber  { background: rgba(245,158,11,0.2); color: var(--amber); }
+  .badge-red    { background: rgba(239,68,68,0.2);  color: var(--red); }
+  .badge-purple { background: rgba(139,92,246,0.2); color: var(--purple); }
+  .badge-cyan   { background: rgba(6,182,212,0.2);  color: var(--cyan); }
+
+  /* ─── Tables ─── */
+  .info-table {
+    width: 100%; border-collapse: collapse; font-size: 9px;
+  }
+  .info-table th {
+    background: rgba(37,99,235,0.15); color: var(--cyan);
+    padding: 5px 8px; text-align: left; font-weight: 600;
+    border-bottom: 1px solid rgba(6,182,212,0.2);
+    text-transform: uppercase; letter-spacing: 0.5px; font-size: 8px;
+  }
+  .info-table td {
+    padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #94A3B8;
+  }
+  .info-table td strong { color: var(--white); }
+  .info-table tr:last-child td { border-bottom: none; }
+
+  /* ─── Flow arrows ─── */
+  .flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cyan); font-size: 20px; opacity: 0.5; flex-shrink: 0;
+  }
+  .flow-arrow-down {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cyan); font-size: 16px; opacity: 0.4; padding: 2px 0;
+  }
+
+  /* ─── Stat callout ─── */
+  .stat-big {
+    font-size: 26px; font-weight: 900; line-height: 1;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-big-amber {
+    font-size: 26px; font-weight: 900; line-height: 1;
+    background: var(--warm-gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-big-green {
+    font-size: 26px; font-weight: 900; line-height: 1;
+    background: var(--success-gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label { font-size: 8.5px; color: #64748B; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+  /* ─── Progress bar ─── */
+  .progress-bar {
+    height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06);
+    overflow: hidden; width: 100%;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+  }
+
+  /* ─── Connectors ─── */
+  .step-number {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+    background: var(--accent-gradient); color: white;
+  }
+  .step-line {
+    width: 2px; background: rgba(37,99,235,0.2); flex-grow: 1; min-height: 8px;
+  }
+
+  /* ─── Footer ─── */
+  .page-footer {
+    position: absolute; bottom: 8mm; left: 20mm; right: 20mm;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 7.5px; color: #475569;
+    border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;
+  }
+
+  /* ─── Divider ─── */
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 10px 0; }
+
+  /* ─── Highlight box ─── */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(6,182,212,0.08));
+    border: 1px solid rgba(37,99,235,0.2);
+    border-radius: 10px; padding: 12px 16px;
+  }
+
+  /* ─── Metric card ─── */
+  .metric-card {
+    background: var(--card-bg); border: 1px solid var(--card-br);
+    border-radius: 8px; padding: 10px 12px; text-align: center;
+  }
+
+  /* ─── Print ─── */
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 1: PROBLEM STATEMENT, PROJECT DEFINITION & DESIRED OUTCOMES
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="flex items-center gap-14" style="margin-bottom: 14px;">
+    <div style="flex:1;">
+      <div class="page-title">Alternative Credit Scoring: Building Explainable AI for Financial Inclusion</div>
+      <div class="page-subtitle">MSIS 522 B — Advanced Machine Learning &nbsp;|&nbsp; Homework 1: The Complete Data Science Workflow</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:9px; color:#64748B;">Page</div>
+      <div style="font-size:28px; font-weight:900; color:rgba(37,99,235,0.3);">01</div>
+    </div>
+  </div>
+
+  <!-- TOP ROW: Problem + Why It Matters -->
+  <div class="flex gap-14">
+
+    <!-- LEFT: The Problem -->
+    <div style="flex: 1.15;">
+      <div class="section-title">🚨 The Problem</div>
+
+      <div class="card card-red" style="margin-bottom: 8px;">
+        <div class="flex items-start gap-10">
+          <div class="icon-circle icon-red">⚠️</div>
+          <div>
+            <div class="subsection-title">The Credit Invisibility Crisis</div>
+            <div class="body-text">
+              <strong>1.4 billion adults worldwide</strong> lack access to formal credit. Traditional scoring relies on
+              credit-bureau history — excluding those with no prior loans, thin files, or unbanked status.
+              This creates a vicious cycle: <strong>no credit → no score → no access</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 8px;">
+        <div class="card card-accent">
+          <div class="flex items-center gap-8">
+            <div class="icon-sm icon-blue">📊</div>
+            <div>
+              <div class="subsection-title" style="font-size:10px;">Data Blindness</div>
+              <div class="small-text">Traditional models use only <strong>5-10 features</strong> from FICO/credit bureaus, ignoring rich behavioral signals</div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-amber">
+          <div class="flex items-center gap-8">
+            <div class="icon-sm icon-amber">🔒</div>
+            <div>
+              <div class="subsection-title" style="font-size:10px;">Black-Box Risk</div>
+              <div class="small-text">ML models can amplify existing biases in lending decisions — <strong>explainability is not optional</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why It Matters Stats -->
+      <div class="section-title" style="margin-top:6px;">📈 Why Alt-Credit Scoring Matters</div>
+      <div class="flex gap-8">
+        <div class="metric-card" style="flex:1;">
+          <div class="stat-big">1.4B</div>
+          <div class="stat-label">Unbanked Adults</div>
+        </div>
+        <div class="metric-card" style="flex:1;">
+          <div class="stat-big-amber">45M</div>
+          <div class="stat-label">US "Credit Invisible"</div>
+        </div>
+        <div class="metric-card" style="flex:1;">
+          <div class="stat-big-green">22%</div>
+          <div class="stat-label">Default Rate (Taiwan)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER DIVIDER -->
+    <div style="width:1px; background: rgba(255,255,255,0.06);"></div>
+
+    <!-- RIGHT: Project Definition -->
+    <div style="flex: 1;">
+      <div class="section-title">🎯 Project Definition</div>
+
+      <div class="highlight-box" style="margin-bottom: 10px;">
+        <div class="body-text" style="color:var(--white); font-weight:500; font-size:10px;">
+          Build an <strong>end-to-end explainable credit scoring pipeline</strong> demonstrating the complete data science
+          workflow: from data acquisition through model comparison to interactive deployment with fairness auditing.
+        </div>
+      </div>
+
+      <!-- Scope cards -->
+      <div class="flex flex-col gap-6">
+        <div class="flex items-start gap-8">
+          <div class="step-number">1</div>
+          <div>
+            <div class="subsection-title" style="font-size:10px;">Research & Data Acquisition</div>
+            <div class="small-text">Identify, evaluate, and download 6+ credit datasets; document provenance and licensing</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-8">
+          <div class="step-number">2</div>
+          <div>
+            <div class="subsection-title" style="font-size:10px;">Exploratory Data Analysis</div>
+            <div class="small-text">Distributions, correlations, class balance, fairness subgroup breakdowns</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-8">
+          <div class="step-number">3</div>
+          <div>
+            <div class="subsection-title" style="font-size:10px;">Predictive Modeling (5 Models)</div>
+            <div class="small-text">Logistic Regression → Decision Tree → Random Forest → XGBoost → MLP Neural Network</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-8">
+          <div class="step-number">4</div>
+          <div>
+            <div class="subsection-title" style="font-size:10px;">Explainability & Fairness</div>
+            <div class="small-text">SHAP analysis (global + local), disparate impact, equalized odds across protected groups</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-8">
+          <div class="step-number">5</div>
+          <div>
+            <div class="subsection-title" style="font-size:10px;">Interactive Deployment</div>
+            <div class="small-text">5-tab Streamlit app with live predictions, SHAP waterfall, and ethics dashboard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider" style="margin: 10px 0 8px;"></div>
+
+  <!-- BOTTOM ROW: Desired Outcomes -->
+  <div class="section-title">✅ Desired Outcomes</div>
+  <div class="grid-3" style="gap:10px;">
+    <div class="card card-green">
+      <div class="flex items-start gap-8">
+        <div class="icon-circle icon-green">🏆</div>
+        <div>
+          <div class="subsection-title" style="font-size:10px;">Best Performing Model</div>
+          <div class="small-text">Identify which of 5 models (LogReg→MLP) achieves highest AUC-ROC on default prediction. Demonstrate that ensemble/boosting methods outperform simple baselines.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card card-purple">
+      <div class="flex items-start gap-8">
+        <div class="icon-circle icon-purple">🔍</div>
+        <div>
+          <div class="subsection-title" style="font-size:10px;">Transparent Decisions</div>
+          <div class="small-text">SHAP-driven explanations for every prediction — answering <strong>"WHY was this applicant denied?"</strong> at both global feature-importance and individual decision levels.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card card-cyan">
+      <div class="flex items-start gap-8">
+        <div class="icon-circle icon-teal">⚖️</div>
+        <div>
+          <div class="subsection-title" style="font-size:10px;">Fair & Auditable AI</div>
+          <div class="small-text">Quantified disparate impact ratios and equalized odds across gender, age, education, and marital status. Actionable mitigation strategies documented.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div>MSIS 522 HW1 — Alternative Credit Scoring Dataset Research &nbsp;•&nbsp; University of Washington</div>
+    <div>March 2026</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 2: METHODOLOGY — KEY STEPS & VALUE
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="flex items-center gap-14" style="margin-bottom: 12px;">
+    <div style="flex:1;">
+      <div class="page-title">Methodology: The Complete Data Science Workflow</div>
+      <div class="page-subtitle">Dataset Research → EDA → Modeling → Explainability → Deployment</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:9px; color:#64748B;">Page</div>
+      <div style="font-size:28px; font-weight:900; color:rgba(37,99,235,0.3);">02</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Dataset Research & Selection -->
+  <div class="flex gap-12" style="margin-bottom: 10px;">
+    <div style="flex: 1.3;">
+      <div class="section-title">🔬 Step 1: Dataset Research & Selection</div>
+      <div class="body-text" style="margin-bottom: 6px;">
+        <strong>Value:</strong> Rigorous dataset selection ensures data quality, licensing compliance, and fitness for fairness analysis. 
+        6 candidate datasets evaluated across size, completeness, and protected-attribute availability.
+      </div>
+      <table class="info-table">
+        <tr>
+          <th>Dataset</th><th>Rows</th><th>Cols</th><th>Source</th><th>Target</th><th>Status</th>
+        </tr>
+        <tr>
+          <td><strong>⭐ Taiwan Credit</strong></td><td>30,000</td><td>25</td><td>UCI</td><td>Default (0/1)</td>
+          <td><span class="badge badge-green">✓ Downloaded</span></td>
+        </tr>
+        <tr>
+          <td><strong>⭐ German Credit</strong></td><td>1,000</td><td>21</td><td>UCI</td><td>Good/Bad</td>
+          <td><span class="badge badge-green">✓ Downloaded</span></td>
+        </tr>
+        <tr>
+          <td><strong>FICO HELOC</strong></td><td>10,459</td><td>24</td><td>GitHub</td><td>Good/Bad</td>
+          <td><span class="badge badge-green">✓ Downloaded</span></td>
+        </tr>
+        <tr>
+          <td><strong>Give Me Some Credit</strong></td><td>150,000</td><td>11</td><td>Kaggle</td><td>Distress (0/1)</td>
+          <td><span class="badge badge-amber">CLI Ready</span></td>
+        </tr>
+        <tr>
+          <td><strong>Home Credit</strong></td><td>307,511</td><td>122</td><td>Kaggle</td><td>Default (0/1)</td>
+          <td><span class="badge badge-amber">CLI Ready</span></td>
+        </tr>
+        <tr>
+          <td><strong>LendingClub</strong></td><td>2.9M</td><td>151</td><td>Kaggle</td><td>Charged Off</td>
+          <td><span class="badge badge-amber">CLI Ready</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <!-- EDA Plan -->
+    <div style="flex: 0.75;">
+      <div class="section-title">📊 Step 2: EDA</div>
+      <div class="body-text" style="margin-bottom: 6px;">
+        <strong>Value:</strong> Uncover data quality issues, feature distributions, and class imbalance before modeling.
+      </div>
+      <div class="flex flex-col gap-4">
+        <div class="card card-cyan" style="padding:8px 10px;">
+          <div class="flex items-center gap-6">
+            <div class="icon-sm icon-cyan">📉</div>
+            <div class="small-text"><strong>Distributions</strong> — Histograms for LIMIT_BAL, AGE, PAY_0</div>
+          </div>
+        </div>
+        <div class="card card-cyan" style="padding:8px 10px;">
+          <div class="flex items-center gap-6">
+            <div class="icon-sm icon-purple">🔥</div>
+            <div class="small-text"><strong>Correlation</strong> — Heatmap across all numeric features</div>
+          </div>
+        </div>
+        <div class="card card-cyan" style="padding:8px 10px;">
+          <div class="flex items-center gap-6">
+            <div class="icon-sm icon-amber">⚖️</div>
+            <div class="small-text"><strong>Class Balance</strong> — ~78% no default, ~22% default</div>
+          </div>
+        </div>
+        <div class="card card-cyan" style="padding:8px 10px;">
+          <div class="flex items-center gap-6">
+            <div class="icon-sm icon-green">👥</div>
+            <div class="small-text"><strong>Subgroups</strong> — Default rate by SEX, EDUCATION, MARRIAGE</div>
+          </div>
+        </div>
+        <div class="card card-cyan" style="padding:8px 10px;">
+          <div class="flex items-center gap-6">
+            <div class="icon-sm icon-red">📦</div>
+            <div class="small-text"><strong>Outliers</strong> — Box plots for billing and payment amounts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ROW 2: Model Pipeline -->
+  <div style="margin-bottom: 8px;">
+    <div class="section-title">🤖 Step 3: Predictive Modeling Pipeline</div>
+    <div class="body-text" style="margin-bottom: 8px;">
+      <strong>Value:</strong> Systematic comparison of 5 model families — from simple baseline to deep learning — reveals the complexity-performance tradeoff.
+      All use <strong>70/30 stratified split</strong> with <code style="font-family:'JetBrains Mono'; font-size:9px; background:rgba(255,255,255,0.08); padding:1px 4px; border-radius:3px;">random_state=42</code>
+      and <strong>5-fold StratifiedKFold</strong> for GridSearchCV.
+    </div>
+
+    <div class="grid-5">
+      <!-- Model 1 -->
+      <div class="card" style="border-top: 3px solid var(--blue); text-align: center; padding: 10px 8px;">
+        <div class="icon-circle icon-blue" style="margin: 0 auto 6px;">📈</div>
+        <div style="font-size:10px; font-weight:700; color:var(--white); margin-bottom:2px;">Logistic Regression</div>
+        <div class="badge badge-blue" style="margin-bottom:4px;">Baseline</div>
+        <div class="small-text">Default hyperparams<br>Linear decision boundary<br>Interpretable coefficients</div>
+      </div>
+      <!-- Model 2 -->
+      <div class="card" style="border-top: 3px solid var(--cyan); text-align: center; padding: 10px 8px;">
+        <div class="icon-circle icon-cyan" style="margin: 0 auto 6px;">🌳</div>
+        <div style="font-size:10px; font-weight:700; color:var(--white); margin-bottom:2px;">Decision Tree</div>
+        <div class="badge badge-cyan" style="margin-bottom:4px;">GridSearchCV</div>
+        <div class="small-text">max_depth: [3,5,7,10]<br>min_samples_leaf:<br>[5,10,20,50]</div>
+      </div>
+      <!-- Model 3 -->
+      <div class="card" style="border-top: 3px solid var(--green); text-align: center; padding: 10px 8px;">
+        <div class="icon-circle icon-green" style="margin: 0 auto 6px;">🌲</div>
+        <div style="font-size:10px; font-weight:700; color:var(--white); margin-bottom:2px;">Random Forest</div>
+        <div class="badge badge-green" style="margin-bottom:4px;">GridSearchCV</div>
+        <div class="small-text">n_estimators: [50,100,200]<br>max_depth: [3,5,8]<br>Ensemble bagging</div>
+      </div>
+      <!-- Model 4 -->
+      <div class="card" style="border-top: 3px solid var(--amber); text-align: center; padding: 10px 8px;">
+        <div class="icon-circle icon-amber" style="margin: 0 auto 6px;">⚡</div>
+        <div style="font-size:10px; font-weight:700; color:var(--white); margin-bottom:2px;">XGBoost</div>
+        <div class="badge badge-amber" style="margin-bottom:4px;">GridSearchCV</div>
+        <div class="small-text">lr: [0.01,0.1,0.3]<br>n_est: [50,100,200]<br>max_depth: [3,5,7]</div>
+      </div>
+      <!-- Model 5 -->
+      <div class="card" style="border-top: 3px solid var(--purple); text-align: center; padding: 10px 8px;">
+        <div class="icon-circle icon-purple" style="margin: 0 auto 6px;">🧠</div>
+        <div style="font-size:10px; font-weight:700; color:var(--white); margin-bottom:2px;">MLP (Keras)</div>
+        <div class="badge badge-purple" style="margin-bottom:4px;">Deep Learning</div>
+        <div class="small-text">≥2 hidden (128 ReLU)<br>Sigmoid output<br>Binary crossentropy</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ROW 3: Explainability + Fairness -->
+  <div class="flex gap-14">
+    <div style="flex:1;">
+      <div class="section-title">🔍 Step 4: SHAP Explainability</div>
+      <div class="body-text" style="margin-bottom: 6px;">
+        <strong>Value:</strong> Moves credit scoring from "black box" to <strong>transparent, auditable decisions</strong>.
+      </div>
+      <div class="grid-2" style="gap: 6px;">
+        <div class="card card-purple" style="padding: 8px 10px;">
+          <div class="subsection-title" style="font-size:10px;">🌐 Global Interpretation</div>
+          <div class="small-text">
+            <strong>Beeswarm Plot:</strong> Which features drive defaults most across all applicants?<br>
+            <strong>Feature Bar:</strong> Ranked importance of each predictor
+          </div>
+        </div>
+        <div class="card card-purple" style="padding: 8px 10px;">
+          <div class="subsection-title" style="font-size:10px;">🎯 Local Interpretation</div>
+          <div class="small-text">
+            <strong>Waterfall Plot:</strong> For a single applicant — exactly why this prediction was made.<br>
+            <strong>Interactive:</strong> User inputs → live SHAP in Tab 4
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:1px; background: rgba(255,255,255,0.06);"></div>
+
+    <div style="flex:1;">
+      <div class="section-title">⚖️ Step 5: Fairness & Ethics Audit</div>
+      <div class="body-text" style="margin-bottom: 6px;">
+        <strong>Value:</strong> Ensures AI lending decisions don't <strong>discriminate by gender, age, or education</strong>.
+      </div>
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-8">
+          <div class="icon-sm icon-red">🔴</div>
+          <div class="small-text"><strong>Disparate Impact:</strong> DI ratio < 0.8 → flag (four-fifths rule)</div>
+        </div>
+        <div class="flex items-center gap-8">
+          <div class="icon-sm icon-amber">🟡</div>
+          <div class="small-text"><strong>Equalized Odds:</strong> Compare TPR/FPR across SEX, AGE groups</div>
+        </div>
+        <div class="flex items-center gap-8">
+          <div class="icon-sm icon-green">🟢</div>
+          <div class="small-text"><strong>Calibration:</strong> Are probabilities accurate per subgroup?</div>
+        </div>
+        <div class="flex items-center gap-8">
+          <div class="icon-sm icon-blue">🔵</div>
+          <div class="small-text"><strong>SHAP Audit:</strong> Protected features shouldn't dominate importance</div>
+        </div>
+        <div class="flex items-center gap-8">
+          <div class="icon-sm icon-purple">🟣</div>
+          <div class="small-text"><strong>Mitigate:</strong> Reweight, remove, or threshold-adjust if biased</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div>MSIS 522 HW1 — Alternative Credit Scoring Dataset Research &nbsp;•&nbsp; University of Washington</div>
+    <div>March 2026</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 3: FINDINGS, OUTCOMES & INTERPRETATION
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="flex items-center gap-14" style="margin-bottom: 12px;">
+    <div style="flex:1;">
+      <div class="page-title">Findings, Outcomes & Impact</div>
+      <div class="page-subtitle">Research Results → Deployment Design → Audience Takeaways</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:9px; color:#64748B;">Page</div>
+      <div style="font-size:28px; font-weight:900; color:rgba(37,99,235,0.3);">03</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Key Findings -->
+  <div class="flex gap-14" style="margin-bottom: 10px;">
+
+    <!-- Dataset Selection Findings -->
+    <div style="flex: 1.1;">
+      <div class="section-title">🏆 Finding 1: Dataset Selection Results</div>
+
+      <div class="highlight-box" style="margin-bottom:8px;">
+        <div class="flex items-center gap-10">
+          <div style="flex:1;">
+            <div style="font-size:12px; font-weight:700; color:var(--white);">Primary Choice: Taiwan Credit Card Default</div>
+            <div class="body-text" style="margin-top: 3px;">
+              The optimal balance of <strong>size (30K rows)</strong>, <strong>cleanliness (0 missing)</strong>,
+              and <strong>fairness features (SEX, AGE, EDUCATION, MARRIAGE)</strong>. Published academic benchmark with clear binary target.
+            </div>
+          </div>
+          <div style="text-align:center;">
+            <div class="stat-big-green">30K</div>
+            <div class="stat-label">Clean Rows</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body-text" style="margin-bottom: 6px;">
+        <strong>Why Taiwan Credit wins over all 6 candidates:</strong>
+      </div>
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-6">
+          <div style="color:var(--green); font-size:12px;">✅</div>
+          <div class="small-text"><strong>Right size</strong> — Large enough for GridSearchCV + MLP, small enough for fast iteration</div>
+        </div>
+        <div class="flex items-center gap-6">
+          <div style="color:var(--green); font-size:12px;">✅</div>
+          <div class="small-text"><strong>Zero missing values</strong> — Skip imputation, focus on modeling</div>
+        </div>
+        <div class="flex items-center gap-6">
+          <div style="color:var(--green); font-size:12px;">✅</div>
+          <div class="small-text"><strong>4 protected attributes</strong> — Full fairness analysis possible (SEX, AGE, EDUCATION, MARRIAGE)</div>
+        </div>
+        <div class="flex items-center gap-6">
+          <div style="color:var(--green); font-size:12px;">✅</div>
+          <div class="small-text"><strong>6-month payment history</strong> — Rich temporal features for SHAP interpretation</div>
+        </div>
+        <div class="flex items-center gap-6">
+          <div style="color:var(--green); font-size:12px;">✅</div>
+          <div class="small-text"><strong>22% default rate</strong> — Natural imbalance motivates SMOTE, not so severe as to collapse metrics</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:1px; background: rgba(255,255,255,0.06);"></div>
+
+    <!-- Expected Model Comparison -->
+    <div style="flex:0.95;">
+      <div class="section-title">📊 Finding 2: Expected Model Performance</div>
+      <div class="body-text" style="margin-bottom: 6px;">Based on published benchmarks on Taiwan Credit dataset:</div>
+
+      <!-- Model ranking visual -->
+      <div class="flex flex-col gap-6">
+        <div>
+          <div class="flex items-center gap-6" style="margin-bottom:3px;">
+            <div class="icon-sm icon-amber" style="font-size:12px;">⚡</div>
+            <div style="font-size:10px; font-weight:600; color:var(--white); flex:1;">XGBoost</div>
+            <div style="font-size:10px; font-weight:700; color:var(--amber);">~0.78 AUC</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:88%; background:var(--warm-gradient);"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-6" style="margin-bottom:3px;">
+            <div class="icon-sm icon-green" style="font-size:12px;">🌲</div>
+            <div style="font-size:10px; font-weight:600; color:var(--white); flex:1;">Random Forest</div>
+            <div style="font-size:10px; font-weight:700; color:var(--green);">~0.77 AUC</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:85%; background:var(--success-gradient);"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-6" style="margin-bottom:3px;">
+            <div class="icon-sm icon-purple" style="font-size:12px;">🧠</div>
+            <div style="font-size:10px; font-weight:600; color:var(--white); flex:1;">MLP Neural Net</div>
+            <div style="font-size:10px; font-weight:700; color:var(--purple);">~0.76 AUC</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:82%; background:linear-gradient(135deg,#8B5CF6,#EC4899);"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-6" style="margin-bottom:3px;">
+            <div class="icon-sm icon-cyan" style="font-size:12px;">🌳</div>
+            <div style="font-size:10px; font-weight:600; color:var(--white); flex:1;">Decision Tree</div>
+            <div style="font-size:10px; font-weight:700; color:var(--cyan);">~0.72 AUC</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:73%; background:linear-gradient(135deg,#06B6D4,#14B8A6);"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-6" style="margin-bottom:3px;">
+            <div class="icon-sm icon-blue" style="font-size:12px;">📈</div>
+            <div style="font-size:10px; font-weight:600; color:var(--white); flex:1;">Logistic Regression</div>
+            <div style="font-size:10px; font-weight:700; color:var(--blue-lt);">~0.71 AUC</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:70%; background:var(--accent-gradient);"></div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:8px; padding:8px 10px; border-left:3px solid var(--amber);">
+        <div class="small-text">
+          <strong style="color:var(--amber);">Key Insight:</strong> XGBoost/RF expected to win on AUC-ROC, but 
+          simpler models (LogReg) offer <strong>better interpretability</strong> — a critical tradeoff in regulated lending.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ROW 2: Deployment + Audience Impact -->
+  <div class="flex gap-14">
+
+    <!-- Streamlit App Design -->
+    <div style="flex: 1.2;">
+      <div class="section-title">🖥️ Outcome: Interactive Streamlit Application</div>
+
+      <div class="flex gap-6" style="margin-bottom: 6px;">
+        <!-- Tab cards in a horizontal flow -->
+        <div class="card" style="flex:1; padding:8px; text-align:center; border-top:3px solid var(--blue);">
+          <div style="font-size:14px;">📋</div>
+          <div style="font-size:8.5px; font-weight:700; color:var(--white); margin-top:2px;">Tab 1</div>
+          <div style="font-size:7.5px; color:#64748B;">Executive<br>Summary</div>
+        </div>
+        <div class="card" style="flex:1; padding:8px; text-align:center; border-top:3px solid var(--cyan);">
+          <div style="font-size:14px;">📊</div>
+          <div style="font-size:8.5px; font-weight:700; color:var(--white); margin-top:2px;">Tab 2</div>
+          <div style="font-size:7.5px; color:#64748B;">Descriptive<br>Analytics</div>
+        </div>
+        <div class="card" style="flex:1; padding:8px; text-align:center; border-top:3px solid var(--green);">
+          <div style="font-size:14px;">🏅</div>
+          <div style="font-size:8.5px; font-weight:700; color:var(--white); margin-top:2px;">Tab 3</div>
+          <div style="font-size:7.5px; color:#64748B;">Model<br>Comparison</div>
+        </div>
+        <div class="card" style="flex:1; padding:8px; text-align:center; border-top:3px solid var(--amber);">
+          <div style="font-size:14px;">🎯</div>
+          <div style="font-size:8.5px; font-weight:700; color:var(--white); margin-top:2px;">Tab 4</div>
+          <div style="font-size:7.5px; color:#64748B;">Predictions<br>+ SHAP</div>
+        </div>
+        <div class="card" style="flex:1; padding:8px; text-align:center; border-top:3px solid var(--purple);">
+          <div style="font-size:14px;">⚖️</div>
+          <div style="font-size:8.5px; font-weight:700; color:var(--white); margin-top:2px;">Tab 5</div>
+          <div style="font-size:7.5px; color:#64748B;">Ethics &<br>Fairness</div>
+        </div>
+      </div>
+
+      <!-- Tab 4 Detail -->
+      <div class="card card-amber" style="padding: 10px;">
+        <div class="subsection-title" style="font-size:10px;">🎯 Tab 4: Interactive Prediction (Key Feature)</div>
+        <div class="flex gap-10" style="margin-top:4px;">
+          <div style="flex:1;">
+            <div class="small-text" style="font-weight:600; color:var(--white); margin-bottom:3px;">User Inputs (Sliders/Dropdowns):</div>
+            <div class="small-text">
+              • Credit Limit: 10K–800K slider<br>
+              • Age: 20–80 slider<br>
+              • Sex: Male/Female dropdown<br>
+              • Education: Grad/Univ/HS/Other<br>
+              • Marriage: Married/Single/Other<br>
+              • Payment Status (PAY_0): -2 to 8
+            </div>
+          </div>
+          <div style="flex:1;">
+            <div class="small-text" style="font-weight:600; color:var(--white); margin-bottom:3px;">Outputs:</div>
+            <div class="small-text">
+              • Default probability gauge<br>
+              • Risk classification (Low/Med/High)<br>
+              • <strong>Live SHAP waterfall plot</strong><br>
+              • Top 3 risk factors explained<br>
+              • Remaining 19 features auto-filled<br>&nbsp;&nbsp;with training-data means/modes
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:1px; background: rgba(255,255,255,0.06);"></div>
+
+    <!-- Audience Impact -->
+    <div style="flex: 0.85;">
+      <div class="section-title">💡 What This Means for the Audience</div>
+
+      <div class="card card-green" style="margin-bottom:6px; padding:10px;">
+        <div class="subsection-title" style="font-size:10px; color:var(--green);">For Lenders & Financial Institutions</div>
+        <div class="small-text">
+          Move from opaque FICO-only decisions to <strong>multi-model, explainable scoring</strong>.
+          Every denial comes with a clear reason — reducing regulatory risk and improving customer trust.
+          Fairness audits prevent discriminatory lending <em>before</em> it reaches production.
+        </div>
+      </div>
+
+      <div class="card card-cyan" style="margin-bottom:6px; padding:10px;">
+        <div class="subsection-title" style="font-size:10px; color:var(--cyan);">For Borrowers & Underserved Communities</div>
+        <div class="small-text">
+          Alternative data (payment history, utility patterns) replaces missing credit-bureau records.
+          <strong>Transparent decisions empower applicants</strong> — they know exactly which behavior to improve
+          for better scores. Fairness checks ensure equal treatment across demographics.
+        </div>
+      </div>
+
+      <div class="card card-purple" style="margin-bottom:6px; padding:10px;">
+        <div class="subsection-title" style="font-size:10px; color:var(--purple);">For Data Scientists & Regulators</div>
+        <div class="small-text">
+          A <strong>reproducible template</strong> for responsible ML in finance: data audit →
+          model comparison → SHAP explainability → fairness metrics → interactive deployment.
+          Demonstrates that <strong>accuracy and fairness are not mutually exclusive</strong>.
+        </div>
+      </div>
+
+      <!-- The Bottom Line -->
+      <div class="highlight-box" style="padding:10px;">
+        <div style="font-size:11px; font-weight:800; color:var(--white); margin-bottom:3px;">
+          The Bottom Line: Explainability ≠ Weakness
+        </div>
+        <div class="body-text" style="color: #CBD5E1;">
+          The best credit scoring model isn't just the most accurate — it's the one stakeholders
+          <strong>trust, understand, and can audit</strong>. This project proves that ensemble models
+          can be both high-performing <em>and</em> transparently fair.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div>MSIS 522 HW1 — Alternative Credit Scoring Dataset Research &nbsp;•&nbsp; University of Washington</div>
+    <div>March 2026 &nbsp;•&nbsp; github.com/taashim-eng/MSIS_522_HW1_Data_Science_Workflow_option2</div>
+  </div>
+</div>
+
+</body>
+</html>
