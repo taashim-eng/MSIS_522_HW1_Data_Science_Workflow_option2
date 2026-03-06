@@ -1,0 +1,33 @@
+# Raw data files (large, download separately)
+*.xls
+*.xlsx
+*.zip
+*.gz
+*.csv.gz
+
+# Keep samples and metadata
+!sample.csv
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Virtual environments
+venv/
+.env/

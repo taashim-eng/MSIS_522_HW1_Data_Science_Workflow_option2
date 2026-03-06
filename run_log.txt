@@ -1,0 +1,60 @@
+# MSIS 522 HW1 — Dataset Research Run Log
+# Generated: 2026-03-05
+
+## Session: 2026-03-05 23:37 PST
+
+[2026-03-05T23:38:00-08:00] START — Dataset research initiated
+[2026-03-05T23:38:30-08:00] RESEARCH — Identified 6 candidate datasets via web search
+  - UCI ML Repository: German Credit, Taiwan Default of Credit Card Clients
+  - FICO Community / GitHub: HELOC dataset
+  - Kaggle: Give Me Some Credit, Home Credit Default Risk, LendingClub Loans
+
+[2026-03-05T23:39:30-08:00] READ — Parsed MSIS_522_HW1_Data_Science_Workflow.docx.pdf
+  - Requirements: 5 models, 5-tab Streamlit app, SHAP, fairness analysis
+  - Split: 70/30, random_state=42
+
+[2026-03-05T23:40:00-08:00] SETUP — Created folder structure for all 6 datasets
+  - german-credit/raw/
+  - taiwan-credit/raw/
+  - fico-heloc/raw/
+  - give-me-some-credit/
+  - home-credit-default-risk/
+  - lendingclub-loans/
+
+[2026-03-05T23:41:00-08:00] DOWNLOAD — German Credit (UCI)
+  - german.data: 79,793 bytes — OK
+  - german.data-numeric: 102,000 bytes — OK
+  - german.doc: 4,679 bytes — OK
+
+[2026-03-05T23:42:00-08:00] DOWNLOAD — Taiwan Default of Credit Card Clients (UCI)
+  - default_credit_card_clients.zip: 5,539,494 bytes — OK
+  - Extracted: default of credit card clients.xls (5,539,328 bytes) — OK
+
+[2026-03-05T23:43:00-08:00] DOWNLOAD — FICO HELOC (GitHub mirror)
+  - heloc_dataset_v1.csv: 678,479 bytes — OK
+
+[2026-03-05T23:43:30-08:00] VERIFY — SHA-256 checksums computed for all downloaded files
+  - german.data: B21F3D81DB8071257D5FF1DEAEBA1FD4303B62712E6FCC9715C7A86202CB5871
+  - german.data-numeric: 2752B044394958AB6DD193A0B56CA0F0B3A2D8BC7CB8C008E35A5E84BBEC02F8
+  - german.doc: 69B92CB551111BC37098698288849C96F0FD87CE81A2E54451FF39AA1E53FE49
+  - default of credit card clients.xls: 30C6BE3ABD8DCFD3E6096C828BAD8C2F011238620F5369220BD60CFC82700933
+  - heloc_dataset_v1.csv: E5A914F742AD7F8472C5417902EC06B321EBC5DE1D68EC13F136D62C87A7FBF3
+
+[2026-03-05T23:44:00-08:00] INSPECT — Loaded and verified data shapes
+  - German Credit: 1,000 rows × 21 columns, 0 missing values
+  - Taiwan Credit: 30,000 rows × 25 columns, 0 missing values
+  - FICO HELOC: 10,459 rows × 24 columns, 0 missing (sentinel values present)
+
+[2026-03-05T23:44:30-08:00] SKIP — Kaggle datasets (require credentials)
+  - Give Me Some Credit: CLI command documented
+  - Home Credit Default Risk: CLI command documented
+  - LendingClub Loans: CLI command documented
+
+[2026-03-05T23:45:00-08:00] WRITE — Generated deliverables
+  - research_writeup.md
+  - 6 per-dataset README.md files
+  - datasets_manifest.json
+  - commands.sh
+  - run_log.txt (this file)
+
+[2026-03-05T23:45:30-08:00] COMPLETE — All tasks finished without errors

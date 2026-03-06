@@ -1,0 +1,1158 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><title>Alternative Credit Scoring - Dataset Research</title><style>
+body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #333; }
+h1 { color: #1a1a1a; border-bottom: 3px solid #2196F3; padding-bottom: 10px; }
+h2 { color: #1565C0; margin-top: 30px; }
+h3 { color: #1976D2; }
+table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+th { background-color: #2196F3; color: white; }
+tr:nth-child(even) { background-color: #f9f9f9; }
+code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+hr { border: none; border-top: 2px solid #e0e0e0; margin: 30px 0; }
+</style></head><body><h1>Alternative Credit Scoring — Dataset Research &amp; HW1 Alignment</h1>
+<p><strong>Course:</strong> MSIS 522 B — Advanced Machine Learning<br />
+<strong>Assignment:</strong> Homework 1 — The Complete Data Science Workflow<br />
+<strong>Date:</strong> 2026-03-05<br />
+<strong>Author:</strong> Taashi M.</p>
+<hr />
+<h2>1. Executive Summary</h2>
+<p>This report identifies, evaluates, and documents <strong>six candidate tabular datasets</strong> suitable for building explainable alternative credit-scoring models. The datasets span classical credit-risk benchmarks (German Credit, Taiwan Default, FICO HELOC), Kaggle competition data (Give Me Some Credit, Home Credit Default Risk), and peer-to-peer lending records (LendingClub). Each dataset supports <strong>binary classification</strong> tasks aligned with MSIS 522 HW1: predicting whether a borrower will default.</p>
+<p><strong>Top 2 recommendations for HW1:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Dataset</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>#1</strong></td>
+<td>Taiwan Default of Credit Card Clients</td>
+<td>30K rows, single CSV, clean binary target, demographic features for fairness analysis, well-documented in academic literature</td>
+</tr>
+<tr>
+<td><strong>#2</strong></td>
+<td>Statlog German Credit</td>
+<td>1K-row classic benchmark, interpretable features, built-in fairness concerns (personal status/sex, foreign worker), fast prototyping</td>
+</tr>
+</tbody>
+</table>
+<p>Both are <strong>directly downloadable without credentials</strong> and satisfy all HW1 requirements: ≥200 rows, clear target variable, tabular format, and real-world provenance.</p>
+<hr />
+<h2>2. Dataset Inventory</h2>
+<h3>Dataset 1: Statlog (German Credit Data)</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Title</strong></td>
+<td>Statlog (German Credit Data)</td>
+</tr>
+<tr>
+<td><strong>Summary</strong></td>
+<td>Classify 1,000 bank customers as good or bad credit risks using 20 financial/demographic features.</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>UCI Machine Learning Repository</td>
+</tr>
+<tr>
+<td><strong>Direct URL</strong></td>
+<td><code>https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data</code></td>
+</tr>
+<tr>
+<td><strong>Download cmd</strong></td>
+<td><code>curl -O https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data</code></td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td><code>german.data</code> (79,793 B), <code>german.data-numeric</code> (102,000 B), <code>german.doc</code> (4,679 B)</td>
+</tr>
+<tr>
+<td><strong>Format</strong></td>
+<td>Space-separated text, no header</td>
+</tr>
+<tr>
+<td><strong>Shape</strong></td>
+<td>1,000 rows × 21 columns</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td><code>Class</code> — 1 = Good, 2 = Bad</td>
+</tr>
+<tr>
+<td><strong>Key fields</strong></td>
+<td><code>Status_checking_acct</code>, <code>Duration</code>, <code>Credit_history</code>, <code>Purpose</code>, <code>Credit_amount</code>, <code>Savings_acct</code>, <code>Age</code>, <code>Personal_status_sex</code>, <code>Foreign_worker</code></td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>CC BY 4.0</td>
+</tr>
+<tr>
+<td><strong>Missing values</strong></td>
+<td>0</td>
+</tr>
+<tr>
+<td><strong>PII risk</strong></td>
+<td>None — fully anonymized categorical codes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample extraction:</strong></p>
+<pre><code class="language-python">import pandas as pd
+cols = ['Status_checking_acct','Duration','Credit_history','Purpose','Credit_amount',
+        'Savings_acct','Present_employment','Installment_rate','Personal_status_sex',
+        'Other_debtors','Residence_since','Property','Age','Other_installment_plans',
+        'Housing','Existing_credits','Job','Num_dependents','Telephone','Foreign_worker','Class']
+df = pd.read_csv('german-credit/raw/german.data', sep=' ', header=None, names=cols)
+sample = df.sample(n=200, random_state=42)
+sample.to_csv('german-credit/sample.csv', index=False)
+</code></pre>
+<p><strong>HW1 Mapping:</strong> This dataset supports all five models (Logistic Regression baseline, Decision Tree, Random Forest, XGBoost, MLP) with its mix of categorical and numeric features. The <code>Personal_status_sex</code> and <code>Foreign_worker</code> columns make it ideal for Tab 5 Ethics &amp; Bias analysis (disparate impact by gender, nationality). Its small size allows rapid GridSearchCV iteration. SHAP waterfall plots are straightforward since the feature space is interpretable. For Tab 4, expose sliders for <code>Duration</code>, <code>Credit_amount</code>, <code>Age</code>, and dropdowns for <code>Purpose</code>, <code>Status_checking_acct</code>.</p>
+<h4>10-Row Preview</h4>
+<table>
+<thead>
+<tr>
+<th>Status_checking_acct</th>
+<th>Duration</th>
+<th>Credit_history</th>
+<th>Purpose</th>
+<th>Credit_amount</th>
+<th>Savings_acct</th>
+<th>Age</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A11</td>
+<td>6</td>
+<td>A34</td>
+<td>A43</td>
+<td>1169</td>
+<td>A65</td>
+<td>67</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A12</td>
+<td>48</td>
+<td>A32</td>
+<td>A43</td>
+<td>5951</td>
+<td>A61</td>
+<td>22</td>
+<td>2</td>
+</tr>
+<tr>
+<td>A14</td>
+<td>12</td>
+<td>A34</td>
+<td>A46</td>
+<td>2096</td>
+<td>A61</td>
+<td>49</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A11</td>
+<td>42</td>
+<td>A32</td>
+<td>A42</td>
+<td>7882</td>
+<td>A61</td>
+<td>45</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A11</td>
+<td>24</td>
+<td>A33</td>
+<td>A40</td>
+<td>4870</td>
+<td>A61</td>
+<td>53</td>
+<td>2</td>
+</tr>
+<tr>
+<td>A14</td>
+<td>36</td>
+<td>A32</td>
+<td>A46</td>
+<td>9055</td>
+<td>A65</td>
+<td>35</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A14</td>
+<td>24</td>
+<td>A32</td>
+<td>A42</td>
+<td>2835</td>
+<td>A63</td>
+<td>53</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A12</td>
+<td>36</td>
+<td>A32</td>
+<td>A41</td>
+<td>6948</td>
+<td>A61</td>
+<td>35</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A14</td>
+<td>12</td>
+<td>A32</td>
+<td>A43</td>
+<td>3059</td>
+<td>A64</td>
+<td>61</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A12</td>
+<td>30</td>
+<td>A34</td>
+<td>A40</td>
+<td>5234</td>
+<td>A61</td>
+<td>28</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Dataset 2: Default of Credit Card Clients (Taiwan)</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Title</strong></td>
+<td>Default of Credit Card Clients</td>
+</tr>
+<tr>
+<td><strong>Summary</strong></td>
+<td>Predict whether 30,000 Taiwan credit-card holders will default on payment next month.</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>UCI Machine Learning Repository</td>
+</tr>
+<tr>
+<td><strong>Direct URL</strong></td>
+<td><code>https://archive.ics.uci.edu/static/public/350/default+of+credit+card+clients.zip</code></td>
+</tr>
+<tr>
+<td><strong>Download cmd</strong></td>
+<td><code>curl -LO https://archive.ics.uci.edu/static/public/350/default+of+credit+card+clients.zip &amp;&amp; unzip default+of+credit+card+clients.zip</code></td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td><code>default of credit card clients.xls</code> (5,539,328 B)</td>
+</tr>
+<tr>
+<td><strong>Format</strong></td>
+<td>Excel (.xls), header on row 2</td>
+</tr>
+<tr>
+<td><strong>Shape</strong></td>
+<td>30,000 rows × 25 columns (incl. ID)</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td><code>default payment next month</code> — 0 = No, 1 = Yes</td>
+</tr>
+<tr>
+<td><strong>Key fields</strong></td>
+<td><code>LIMIT_BAL</code>, <code>SEX</code>, <code>EDUCATION</code>, <code>MARRIAGE</code>, <code>AGE</code>, <code>PAY_0</code>–<code>PAY_6</code> (repayment status), <code>BILL_AMT1</code>–<code>BILL_AMT6</code>, <code>PAY_AMT1</code>–<code>PAY_AMT6</code></td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>CC BY 4.0</td>
+</tr>
+<tr>
+<td><strong>Missing values</strong></td>
+<td>0</td>
+</tr>
+<tr>
+<td><strong>PII risk</strong></td>
+<td>None — anonymized IDs, no names/addresses</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample extraction:</strong></p>
+<pre><code class="language-python">import pandas as pd
+df = pd.read_excel('taiwan-credit/raw/default of credit card clients.xls', header=1)
+sample = df.sample(n=200, random_state=42)
+sample.to_csv('taiwan-credit/sample.csv', index=False)
+</code></pre>
+<p><strong>HW1 Mapping:</strong> The <strong>recommended primary dataset for HW1</strong>. At 30K rows, it provides robust training for all five models. The 6-month payment history (<code>PAY_0</code>–<code>PAY_6</code>) and billing amounts offer rich numeric features for SHAP interpretation. <code>SEX</code>, <code>EDUCATION</code>, <code>MARRIAGE</code>, and <code>AGE</code> enable fairness auditing (Tab 5). For Tab 4 interactive predictions, expose sliders for <code>LIMIT_BAL</code>, <code>AGE</code>, and <code>PAY_0</code> (most recent payment status), with dropdowns for <code>SEX</code>, <code>EDUCATION</code>, <code>MARRIAGE</code>; use mean/mode for remaining features. Class imbalance (~22% default) requires handling via SMOTE or <code>class_weight='balanced'</code>.</p>
+<h4>10-Row Preview</h4>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>LIMIT_BAL</th>
+<th>SEX</th>
+<th>EDUCATION</th>
+<th>MARRIAGE</th>
+<th>AGE</th>
+<th>PAY_0</th>
+<th>PAY_2</th>
+<th>PAY_3</th>
+<th>PAY_4</th>
+<th>PAY_5</th>
+<th>PAY_6</th>
+<th>BILL_AMT1</th>
+<th>default payment next month</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>20000</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>24</td>
+<td>2</td>
+<td>2</td>
+<td>-1</td>
+<td>-1</td>
+<td>-2</td>
+<td>-2</td>
+<td>3913</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>120000</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>26</td>
+<td>-1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>2682</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>90000</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>34</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>29239</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>50000</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>37</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>46990</td>
+<td>0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>50000</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>57</td>
+<td>-1</td>
+<td>0</td>
+<td>-1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>8617</td>
+<td>0</td>
+</tr>
+<tr>
+<td>6</td>
+<td>500000</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>37</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>64400</td>
+<td>0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>100000</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>29</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>367965</td>
+<td>0</td>
+</tr>
+<tr>
+<td>8</td>
+<td>100000</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>23</td>
+<td>0</td>
+<td>-1</td>
+<td>-1</td>
+<td>0</td>
+<td>0</td>
+<td>-1</td>
+<td>11876</td>
+<td>0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>80000</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>28</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>11285</td>
+<td>0</td>
+</tr>
+<tr>
+<td>10</td>
+<td>300000</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>35</td>
+<td>-2</td>
+<td>-2</td>
+<td>-2</td>
+<td>-2</td>
+<td>-1</td>
+<td>-1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Dataset 3: FICO HELOC (Home Equity Line of Credit)</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Title</strong></td>
+<td>FICO Explainable ML Challenge — HELOC Dataset</td>
+</tr>
+<tr>
+<td><strong>Summary</strong></td>
+<td>Predict "good/bad" repayment performance on 10,459 home equity line-of-credit applications using 23 credit-bureau features.</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>FICO Community / GitHub mirror</td>
+</tr>
+<tr>
+<td><strong>Direct URL</strong></td>
+<td><code>https://raw.githubusercontent.com/benoitparis/explainable-challenge/master/heloc_dataset_v1.csv</code></td>
+</tr>
+<tr>
+<td><strong>Download cmd</strong></td>
+<td><code>curl -O https://raw.githubusercontent.com/benoitparis/explainable-challenge/master/heloc_dataset_v1.csv</code></td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td><code>heloc_dataset_v1.csv</code> (678,479 B)</td>
+</tr>
+<tr>
+<td><strong>Format</strong></td>
+<td>CSV with header</td>
+</tr>
+<tr>
+<td><strong>Shape</strong></td>
+<td>10,459 rows × 24 columns</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td><code>RiskPerformance</code> — "Good" or "Bad"</td>
+</tr>
+<tr>
+<td><strong>Key fields</strong></td>
+<td><code>ExternalRiskEstimate</code>, <code>MSinceOldestTradeOpen</code>, <code>NumSatisfactoryTrades</code>, <code>PercentTradesNeverDelq</code>, <code>NetFractionRevolvingBurden</code>, <code>NumInqLast6M</code></td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>Research use (FICO Explainable ML Challenge terms)</td>
+</tr>
+<tr>
+<td><strong>Missing values</strong></td>
+<td>0 (but sentinel value <code>-7</code> = "Condition not Met", <code>-8</code> = "No Usable/Valid Trades", <code>-9</code> = "No Bureau Record")</td>
+</tr>
+<tr>
+<td><strong>PII risk</strong></td>
+<td>None — all credit-bureau aggregates</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample extraction:</strong></p>
+<pre><code class="language-python">import pandas as pd
+df = pd.read_csv('fico-heloc/raw/heloc_dataset_v1.csv')
+sample = df.sample(n=200, random_state=42)
+sample.to_csv('fico-heloc/sample.csv', index=False)
+</code></pre>
+<p><strong>HW1 Mapping:</strong> This dataset was designed specifically for <strong>explainable machine learning</strong>. All 23 features are numeric credit-bureau aggregates, making SHAP analysis especially clear. The sentinel values (-7, -8, -9) require pre-processing (replace with NaN or encode). No demographic features, so fairness analysis must focus on algorithmic bias rather than protected attributes. For Tab 4, expose sliders for <code>ExternalRiskEstimate</code>, <code>NumSatisfactoryTrades</code>, <code>PercentTradesNeverDelq</code>, <code>NetFractionRevolvingBurden</code>; average remaining features.</p>
+<h4>10-Row Preview</h4>
+<table>
+<thead>
+<tr>
+<th>RiskPerformance</th>
+<th>ExternalRiskEstimate</th>
+<th>MSinceOldestTradeOpen</th>
+<th>AverageMInFile</th>
+<th>NumSatisfactoryTrades</th>
+<th>PercentTradesNeverDelq</th>
+<th>NumTotalTrades</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bad</td>
+<td>55</td>
+<td>144</td>
+<td>84</td>
+<td>20</td>
+<td>83</td>
+<td>23</td>
+</tr>
+<tr>
+<td>Bad</td>
+<td>61</td>
+<td>58</td>
+<td>41</td>
+<td>2</td>
+<td>100</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Bad</td>
+<td>67</td>
+<td>66</td>
+<td>24</td>
+<td>9</td>
+<td>100</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Bad</td>
+<td>66</td>
+<td>169</td>
+<td>73</td>
+<td>28</td>
+<td>93</td>
+<td>30</td>
+</tr>
+<tr>
+<td>Bad</td>
+<td>81</td>
+<td>333</td>
+<td>132</td>
+<td>12</td>
+<td>100</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Bad</td>
+<td>59</td>
+<td>137</td>
+<td>78</td>
+<td>31</td>
+<td>91</td>
+<td>32</td>
+</tr>
+<tr>
+<td>Good</td>
+<td>54</td>
+<td>88</td>
+<td>37</td>
+<td>25</td>
+<td>92</td>
+<td>26</td>
+</tr>
+<tr>
+<td>Good</td>
+<td>68</td>
+<td>148</td>
+<td>65</td>
+<td>17</td>
+<td>83</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Bad</td>
+<td>59</td>
+<td>324</td>
+<td>138</td>
+<td>24</td>
+<td>85</td>
+<td>27</td>
+</tr>
+<tr>
+<td>Bad</td>
+<td>61</td>
+<td>79</td>
+<td>36</td>
+<td>19</td>
+<td>95</td>
+<td>19</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Dataset 4: Give Me Some Credit (Kaggle)</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Title</strong></td>
+<td>Give Me Some Credit</td>
+</tr>
+<tr>
+<td><strong>Summary</strong></td>
+<td>Predict financial distress within 2 years for 150,000 borrowers using 10 financial features.</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>Kaggle Competition</td>
+</tr>
+<tr>
+<td><strong>Kaggle slug</strong></td>
+<td><code>competitions/GiveMeSomeCredit</code></td>
+</tr>
+<tr>
+<td><strong>Download cmd</strong></td>
+<td><code>kaggle competitions download -c GiveMeSomeCredit -p give-me-some-credit/raw/</code></td>
+</tr>
+<tr>
+<td><strong>Credentials</strong></td>
+<td>Set <code>KAGGLE_USERNAME</code> and <code>KAGGLE_KEY</code> environment variables (<code>$env:KAGGLE_USERNAME = "your_username"</code>)</td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td><code>cs-training.csv</code> (~10 MB), <code>cs-test.csv</code> (~5 MB), <code>Data Dictionary.xls</code>, <code>sampleEntry.csv</code></td>
+</tr>
+<tr>
+<td><strong>Format</strong></td>
+<td>CSV with header</td>
+</tr>
+<tr>
+<td><strong>Shape</strong></td>
+<td>~150,000 rows × 11 columns</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td><code>SeriousDlqin2yrs</code> — 0 = No, 1 = Yes</td>
+</tr>
+<tr>
+<td><strong>Key fields</strong></td>
+<td><code>RevolvingUtilizationOfUnsecuredLines</code>, <code>age</code>, <code>NumberOfTime30-59DaysPastDueNotWorse</code>, <code>DebtRatio</code>, <code>MonthlyIncome</code>, <code>NumberOfOpenCreditLinesAndLoans</code>, <code>NumberRealEstateLoansOrLines</code>, <code>NumberOfDependents</code></td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>Kaggle Competition Rules</td>
+</tr>
+<tr>
+<td><strong>Missing values</strong></td>
+<td>~29,000 in <code>MonthlyIncome</code>, ~3,900 in <code>NumberOfDependents</code></td>
+</tr>
+<tr>
+<td><strong>PII risk</strong></td>
+<td>None — anonymized</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample extraction:</strong></p>
+<pre><code class="language-python">import pandas as pd
+df = pd.read_csv('give-me-some-credit/raw/cs-training.csv', index_col=0)
+sample = df.sample(n=200, random_state=42)
+sample.to_csv('give-me-some-credit/sample.csv', index=False)
+</code></pre>
+<p><strong>HW1 Mapping:</strong> Large training set for robust model comparison. Missing values in <code>MonthlyIncome</code> and <code>NumberOfDependents</code> demonstrate imputation techniques. The <code>age</code> field supports basic fairness checks. Target is imbalanced (~6.7% positive), motivating SMOTE or class weighting. Good candidate for demonstrating the full GridSearchCV pipeline due to ample data.</p>
+<hr />
+<h3>Dataset 5: Home Credit Default Risk (Kaggle)</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Title</strong></td>
+<td>Home Credit Default Risk</td>
+</tr>
+<tr>
+<td><strong>Summary</strong></td>
+<td>Predict loan repayment ability for 307K+ applicants using multi-table financial data (applications, bureau records, past loans).</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>Kaggle Competition</td>
+</tr>
+<tr>
+<td><strong>Kaggle slug</strong></td>
+<td><code>competitions/home-credit-default-risk</code></td>
+</tr>
+<tr>
+<td><strong>Download cmd</strong></td>
+<td><code>kaggle competitions download -c home-credit-default-risk -p home-credit-default-risk/raw/</code></td>
+</tr>
+<tr>
+<td><strong>Credentials</strong></td>
+<td>Set <code>KAGGLE_USERNAME</code> and <code>KAGGLE_KEY</code> environment variables</td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td><code>application_train.csv</code> (~307K rows), <code>application_test.csv</code>, <code>bureau.csv</code>, <code>bureau_balance.csv</code>, <code>POS_CASH_balance.csv</code>, <code>credit_card_balance.csv</code>, <code>previous_application.csv</code>, <code>installments_payments.csv</code></td>
+</tr>
+<tr>
+<td><strong>Format</strong></td>
+<td>CSV with header</td>
+</tr>
+<tr>
+<td><strong>Shape</strong></td>
+<td>307,511 rows × 122 columns (main table)</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td><code>TARGET</code> — 0 = Repaid, 1 = Default</td>
+</tr>
+<tr>
+<td><strong>Key fields</strong></td>
+<td><code>AMT_INCOME_TOTAL</code>, <code>AMT_CREDIT</code>, <code>AMT_ANNUITY</code>, <code>NAME_CONTRACT_TYPE</code>, <code>CODE_GENDER</code>, <code>DAYS_BIRTH</code>, <code>DAYS_EMPLOYED</code>, <code>EXT_SOURCE_1/2/3</code></td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>Kaggle Competition Rules</td>
+</tr>
+<tr>
+<td><strong>Missing values</strong></td>
+<td>Significant across many columns (60+ columns have &gt;50% missing)</td>
+</tr>
+<tr>
+<td><strong>PII risk</strong></td>
+<td>None — anonymized with encoded categories</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample extraction:</strong></p>
+<pre><code class="language-python">import pandas as pd
+df = pd.read_csv('home-credit-default-risk/raw/application_train.csv')
+sample = df.sample(n=200, random_state=42)
+sample.to_csv('home-credit-default-risk/sample.csv', index=False)
+</code></pre>
+<p><strong>HW1 Mapping:</strong> The richest dataset with relational tables supporting advanced feature engineering. However, its 122 columns and multi-table structure may be <strong>overly complex for HW1</strong> — better suited for a semester project. The <code>CODE_GENDER</code> field enables fairness analysis. Has severe class imbalance (~8% default).</p>
+<hr />
+<h3>Dataset 6: LendingClub Loan Data (Kaggle)</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Title</strong></td>
+<td>Lending Club Loans 2007-2020</td>
+</tr>
+<tr>
+<td><strong>Summary</strong></td>
+<td>Peer-to-peer lending records for ~2.9M loans with 151 features covering borrower profiles, loan details, and outcomes.</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>Kaggle</td>
+</tr>
+<tr>
+<td><strong>Kaggle slug</strong></td>
+<td><code>datasets/ethon0426/lending-club-20072020q1</code></td>
+</tr>
+<tr>
+<td><strong>Download cmd</strong></td>
+<td><code>kaggle datasets download -d ethon0426/lending-club-20072020q1 -p lendingclub-loans/raw/</code></td>
+</tr>
+<tr>
+<td><strong>Credentials</strong></td>
+<td>Set <code>KAGGLE_USERNAME</code> and <code>KAGGLE_KEY</code> environment variables</td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td><code>accepted_2007_to_2018Q4.csv.gz</code> (~640 MB uncompressed)</td>
+</tr>
+<tr>
+<td><strong>Format</strong></td>
+<td>Compressed CSV</td>
+</tr>
+<tr>
+<td><strong>Shape</strong></td>
+<td>~2,900,000 rows × 151 columns</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td><code>loan_status</code> — map "Charged Off" = 1, "Fully Paid" = 0</td>
+</tr>
+<tr>
+<td><strong>Key fields</strong></td>
+<td><code>loan_amnt</code>, <code>int_rate</code>, <code>annual_inc</code>, <code>dti</code>, <code>delinq_2yrs</code>, <code>fico_range_low</code>, <code>open_acc</code>, <code>pub_rec</code>, <code>purpose</code>, <code>addr_state</code>, <code>emp_length</code></td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>CC0 Public Domain</td>
+</tr>
+<tr>
+<td><strong>Missing values</strong></td>
+<td>Substantial across many columns</td>
+</tr>
+<tr>
+<td><strong>PII risk</strong></td>
+<td>Low — <code>addr_state</code> and <code>zip_code</code> (3-digit) may be quasi-identifiers; redact or generalize for privacy</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample extraction:</strong></p>
+<pre><code class="language-python">import pandas as pd
+df = pd.read_csv('lendingclub-loans/raw/accepted_2007_to_2018Q4.csv.gz', nrows=50000)
+# Filter to completed loans only
+df = df[df['loan_status'].isin(['Fully Paid', 'Charged Off'])]
+sample = df.sample(n=200, random_state=42)
+sample.to_csv('lendingclub-loans/sample.csv', index=False)
+</code></pre>
+<p><strong>HW1 Mapping:</strong> Real-world P2P lending data with rich features. However, the 2.9M-row size requires subsampling, and 151 columns need significant feature selection. Best for students wanting to demonstrate scalable pipelines. <code>addr_state</code> enables geographic fairness analysis.</p>
+<hr />
+<h2>3. Top 2 Recommendation &amp; Justification</h2>
+<h3>🥇 Primary Recommendation: Taiwan Default of Credit Card Clients</h3>
+<p><strong>Why:</strong>
+1. <strong>Right size</strong>: 30,000 rows — large enough for meaningful train/test splits and GridSearchCV, small enough for fast MLP training
+2. <strong>Clean</strong>: Zero missing values, single file, straightforward Excel import
+3. <strong>Binary classification</strong>: Clear target (<code>default payment next month</code>)
+4. <strong>Fairness-ready</strong>: <code>SEX</code> (gender), <code>EDUCATION</code>, <code>MARRIAGE</code>, <code>AGE</code> enable Tab 5 disparate-impact and equalized-odds analysis
+5. <strong>SHAP-friendly</strong>: Mix of categorical (encoded as integers) and continuous features produces interpretable SHAP plots
+6. <strong>Class imbalance</strong>: ~22% default rate — enough to motivate SMOTE/class-weighting, not so extreme as to collapse metrics
+7. <strong>Academic pedigree</strong>: Published in Yeh &amp; Lien (2009), widely used in ML coursework</p>
+<h3>🥈 Secondary Recommendation: Statlog German Credit</h3>
+<p><strong>Why:</strong>
+1. <strong>Fast prototyping</strong>: 1,000 rows — entire pipeline runs in seconds
+2. <strong>Interpretable</strong>: 20 features with clear business meaning
+3. <strong>Ethics showcase</strong>: <code>Personal_status_sex</code>, <code>Foreign_worker</code>, <code>Age</code> are textbook fairness-audit examples
+4. <strong>Proven benchmark</strong>: One of the most-cited credit datasets in ML literature
+5. <strong>Complementary</strong>: If used alongside Taiwan Credit, demonstrates model behavior on small vs. medium datasets</p>
+<hr />
+<h2>4. EDA Plan (Top 2 Picks)</h2>
+<h3>Taiwan Default of Credit Card Clients</h3>
+<table>
+<thead>
+<tr>
+<th>EDA Step</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Distributions</strong></td>
+<td>Histograms for <code>LIMIT_BAL</code>, <code>AGE</code>, <code>BILL_AMT1</code>–<code>BILL_AMT6</code></td>
+</tr>
+<tr>
+<td><strong>Target balance</strong></td>
+<td>Bar chart of <code>default payment next month</code> (0 vs. 1)</td>
+</tr>
+<tr>
+<td><strong>Correlation</strong></td>
+<td>Heatmap of all numeric features (expect high correlation among <code>BILL_AMT</code> and <code>PAY_AMT</code> series)</td>
+</tr>
+<tr>
+<td><strong>Cross-tabs</strong></td>
+<td>Default rate by <code>SEX</code>, <code>EDUCATION</code>, <code>MARRIAGE</code></td>
+</tr>
+<tr>
+<td><strong>Outlier detection</strong></td>
+<td>Box plots for <code>LIMIT_BAL</code>, <code>BILL_AMT1</code>, <code>PAY_AMT1</code></td>
+</tr>
+<tr>
+<td><strong>Payment patterns</strong></td>
+<td>Stacked bar chart of <code>PAY_0</code>–<code>PAY_6</code> distributions</td>
+</tr>
+</tbody>
+</table>
+<h3>Statlog German Credit</h3>
+<table>
+<thead>
+<tr>
+<th>EDA Step</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Distributions</strong></td>
+<td>Histograms for <code>Duration</code>, <code>Credit_amount</code>, <code>Age</code></td>
+</tr>
+<tr>
+<td><strong>Target balance</strong></td>
+<td>Bar chart of <code>Class</code> (1=Good vs. 2=Bad; note: 70/30 split)</td>
+</tr>
+<tr>
+<td><strong>Cross-tabs</strong></td>
+<td>Default rate by <code>Personal_status_sex</code>, <code>Foreign_worker</code>, <code>Purpose</code></td>
+</tr>
+<tr>
+<td><strong>Correlation</strong></td>
+<td>Heatmap of numeric features (after encoding categoricals)</td>
+</tr>
+<tr>
+<td><strong>Feature importance</strong></td>
+<td>Preliminary Random Forest importance plot</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. Feature Engineering Suggestions</h2>
+<h3>Taiwan Credit</h3>
+<ul>
+<li><strong>Payment behavior aggregates</strong>: <code>avg_delay = mean(PAY_0..PAY_6)</code>, <code>max_delay</code>, <code>num_months_delayed</code></li>
+<li><strong>Utilization ratio</strong>: <code>BILL_AMT1 / LIMIT_BAL</code></li>
+<li><strong>Payment ratio</strong>: <code>PAY_AMT1 / BILL_AMT1</code> (how much of the bill was paid)</li>
+<li><strong>Trend features</strong>: Slope of <code>BILL_AMT1..BILL_AMT6</code> over time (increasing debt trend)</li>
+<li><strong>Age bins</strong>: Discretize <code>AGE</code> into brackets for fairness subgroup analysis</li>
+</ul>
+<h3>German Credit</h3>
+<ul>
+<li><strong>Encode categoricals</strong>: One-hot or ordinal encoding for <code>Status_checking_acct</code>, <code>Credit_history</code>, <code>Purpose</code>, etc.</li>
+<li><strong>Interaction features</strong>: <code>Credit_amount × Duration</code>, <code>Age × Present_employment</code></li>
+<li><strong>Binary flags</strong>: <code>has_telephone</code>, <code>is_foreign_worker</code></li>
+<li><strong>Risk score proxy</strong>: Combine <code>Status_checking_acct</code> + <code>Savings_acct</code> into liquidity score</li>
+</ul>
+<hr />
+<h2>6. Baseline Model Plan</h2>
+<h3>Train/Test Split</h3>
+<pre><code class="language-python">from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+</code></pre>
+<h3>Model Pipeline</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Model</th>
+<th>Implementation</th>
+<th>Hyperparameter Tuning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Logistic Regression</strong></td>
+<td><code>sklearn.linear_model.LogisticRegression</code></td>
+<td>Baseline — default params</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Decision Tree</strong></td>
+<td><code>sklearn.tree.DecisionTreeClassifier</code></td>
+<td>GridSearchCV(5-fold): <code>max_depth=[3,5,7,10]</code>, <code>min_samples_leaf=[5,10,20,50]</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Random Forest</strong></td>
+<td><code>sklearn.ensemble.RandomForestClassifier</code></td>
+<td>GridSearchCV(5-fold): <code>n_estimators=[50,100,200]</code>, <code>max_depth=[3,5,8]</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>XGBoost</strong></td>
+<td><code>xgboost.XGBClassifier</code></td>
+<td>GridSearchCV(5-fold): <code>learning_rate=[0.01,0.1,0.3]</code>, <code>n_estimators=[50,100,200]</code>, <code>max_depth=[3,5,7]</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>MLP</strong></td>
+<td><code>keras.Sequential</code></td>
+<td>≥2 hidden layers (128 units, ReLU), output sigmoid, binary crossentropy</td>
+</tr>
+</tbody>
+</table>
+<h3>Evaluation Metrics</h3>
+<ul>
+<li><strong>Accuracy</strong>, <strong>Precision</strong>, <strong>Recall</strong>, <strong>F1-Score</strong>, <strong>ROC-AUC</strong></li>
+<li>Confusion matrix for each model</li>
+<li>ROC curve comparison plot</li>
+</ul>
+<hr />
+<h2>7. Fairness &amp; Audit Checklist</h2>
+<h3>Disparate Impact Analysis</h3>
+<pre><code class="language-python"># For Taiwan Credit — check default predictions by SEX
+from sklearn.metrics import confusion_matrix
+male_preds = model.predict(X_test[X_test['SEX'] == 1])
+female_preds = model.predict(X_test[X_test['SEX'] == 2])
+# Disparate impact ratio = P(favorable|unprivileged) / P(favorable|privileged)
+</code></pre>
+<h3>Checklist</h3>
+<ul>
+<li>[ ] <strong>Data bias</strong>: Check class distribution across protected attributes (<code>SEX</code>, <code>AGE</code>, <code>EDUCATION</code>, <code>MARRIAGE</code>)</li>
+<li>[ ] <strong>Disparate impact</strong>: Compute DI ratio for each model; flag if &lt; 0.8 (four-fifths rule)</li>
+<li>[ ] <strong>Equalized odds</strong>: Compare TPR and FPR across subgroups</li>
+<li>[ ] <strong>Calibration</strong>: Check if predicted probabilities are well-calibrated per subgroup</li>
+<li>[ ] <strong>Feature influence</strong>: Use SHAP to check if protected attributes have outsized importance</li>
+<li>[ ] <strong>Mitigation</strong>: If bias detected, consider: removing protected features, reweighting, or post-processing threshold adjustment</li>
+<li>[ ] <strong>Documentation</strong>: Record all findings in Tab 5 of Streamlit app</li>
+</ul>
+<hr />
+<h2>8. Streamlit App Wireframe</h2>
+<h3>Tab 1: Executive Summary</h3>
+<ul>
+<li>Problem statement and dataset description</li>
+<li>Key findings in bullet points</li>
+<li>Best model name and its AUC-ROC score</li>
+</ul>
+<h3>Tab 2: Descriptive Analytics</h3>
+<ul>
+<li><code>st.dataframe(df.head())</code> — interactive data preview</li>
+<li><code>st.write(df.describe())</code> — summary statistics</li>
+<li>Plotly/Matplotlib histograms for key features</li>
+<li>Seaborn correlation heatmap</li>
+</ul>
+<h3>Tab 3: Model Performance</h3>
+<ul>
+<li>Comparison table: all 5 models × 5 metrics</li>
+<li>Bar chart: AUC-ROC comparison</li>
+<li>ROC curves overlay (one per model)</li>
+<li>Best model's confusion matrix</li>
+</ul>
+<h3>Tab 4: Predictions &amp; Explainability</h3>
+<ul>
+<li><strong>Interactive inputs:</strong></li>
+<li><code>st.slider("Credit Limit", 10000, 800000, 150000)</code> — <code>LIMIT_BAL</code></li>
+<li><code>st.slider("Age", 20, 80, 35)</code> — <code>AGE</code></li>
+<li><code>st.selectbox("Sex", [1, 2])</code> — <code>SEX</code> (1=Male, 2=Female)</li>
+<li><code>st.selectbox("Education", [1, 2, 3, 4])</code> — <code>EDUCATION</code></li>
+<li><code>st.selectbox("Marriage", [1, 2, 3])</code> — <code>MARRIAGE</code></li>
+<li><code>st.slider("Most Recent Payment Status", -2, 8, 0)</code> — <code>PAY_0</code></li>
+<li>Remaining features (<code>BILL_AMT</code>, <code>PAY_AMT</code>) use <strong>averaged defaults</strong> from training data</li>
+<li><strong>Output:</strong> Prediction probability + SHAP waterfall plot for the input</li>
+</ul>
+<h3>Tab 5: Ethics &amp; Responsible AI</h3>
+<ul>
+<li>Bias analysis results (disparate impact table)</li>
+<li>Equalized odds comparison chart</li>
+<li>Discussion of societal impact</li>
+<li>Mitigation strategies applied/recommended</li>
+</ul>
+<hr />
+<h2>9. CV Strategy</h2>
+<pre><code class="language-python">from sklearn.model_selection import GridSearchCV, StratifiedKFold
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+# Example: Random Forest
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [3, 5, 8]
+}
+grid_search = GridSearchCV(
+    RandomForestClassifier(random_state=42, class_weight='balanced'),
+    param_grid, cv=cv, scoring='roc_auc', n_jobs=-1
+)
+grid_search.fit(X_train, y_train)
+</code></pre>
+<hr />
+<h2>10. Appendix: Kaggle CLI Setup</h2>
+<h3>Step 1: Install Kaggle CLI</h3>
+<pre><code class="language-bash">pip install kaggle
+</code></pre>
+<h3>Step 2: Set Credentials</h3>
+<pre><code class="language-powershell">$env:KAGGLE_USERNAME = &quot;your_kaggle_username&quot;
+$env:KAGGLE_KEY = &quot;your_kaggle_api_key&quot;
+</code></pre>
+<p>Or create <code>%USERPROFILE%\.kaggle\kaggle.json</code>:</p>
+<pre><code class="language-json">{&quot;username&quot;: &quot;your_kaggle_username&quot;, &quot;key&quot;: &quot;your_kaggle_api_key&quot;}
+</code></pre>
+<h3>Step 3: Download Datasets</h3>
+<pre><code class="language-bash"># Give Me Some Credit
+kaggle competitions download -c GiveMeSomeCredit -p give-me-some-credit/raw/
+
+# Home Credit Default Risk
+kaggle competitions download -c home-credit-default-risk -p home-credit-default-risk/raw/
+
+# LendingClub Loans
+kaggle datasets download -d ethon0426/lending-club-20072020q1 -p lendingclub-loans/raw/
+</code></pre>
+<h3>Step 4: To obtain your API key</h3>
+<ol>
+<li>Go to https://www.kaggle.com/settings</li>
+<li>Scroll to "API" section</li>
+<li>Click "Create New Token"</li>
+<li>Download <code>kaggle.json</code> and place it in <code>%USERPROFILE%\.kaggle\</code></li>
+</ol></body></html>

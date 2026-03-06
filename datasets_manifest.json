@@ -1,0 +1,141 @@
+{
+    "generated_at": "2026-03-05T23:44:00-08:00",
+    "description": "Dataset manifest for MSIS 522 HW1 - Alternative Credit Scoring",
+    "datasets": [
+        {
+            "slug": "german-credit",
+            "title": "Statlog (German Credit Data)",
+            "source": "UCI Machine Learning Repository",
+            "license": "CC BY 4.0",
+            "downloaded": true,
+            "files": [
+                {
+                    "filename": "german.data",
+                    "path": "german-credit/raw/german.data",
+                    "size_bytes": 79793,
+                    "rows": 1000,
+                    "columns": 21,
+                    "format": "space-separated text",
+                    "sha256": "B21F3D81DB8071257D5FF1DEAEBA1FD4303B62712E6FCC9715C7A86202CB5871"
+                },
+                {
+                    "filename": "german.data-numeric",
+                    "path": "german-credit/raw/german.data-numeric",
+                    "size_bytes": 102000,
+                    "rows": 1000,
+                    "columns": 25,
+                    "format": "space-separated numeric",
+                    "sha256": "2752B044394958AB6DD193A0B56CA0F0B3A2D8BC7CB8C008E35A5E84BBEC02F8"
+                },
+                {
+                    "filename": "german.doc",
+                    "path": "german-credit/raw/german.doc",
+                    "size_bytes": 4679,
+                    "rows": null,
+                    "columns": null,
+                    "format": "text documentation",
+                    "sha256": "69B92CB551111BC37098698288849C96F0FD87CE81A2E54451FF39AA1E53FE49"
+                }
+            ]
+        },
+        {
+            "slug": "taiwan-credit",
+            "title": "Default of Credit Card Clients (Taiwan)",
+            "source": "UCI Machine Learning Repository",
+            "license": "CC BY 4.0",
+            "downloaded": true,
+            "files": [
+                {
+                    "filename": "default of credit card clients.xls",
+                    "path": "taiwan-credit/raw/default of credit card clients.xls",
+                    "size_bytes": 5539328,
+                    "rows": 30000,
+                    "columns": 25,
+                    "format": "Excel (.xls)",
+                    "sha256": "30C6BE3ABD8DCFD3E6096C828BAD8C2F011238620F5369220BD60CFC82700933"
+                }
+            ]
+        },
+        {
+            "slug": "fico-heloc",
+            "title": "FICO HELOC (Home Equity Line of Credit)",
+            "source": "FICO / GitHub mirror",
+            "license": "Research use (FICO Challenge terms)",
+            "downloaded": true,
+            "files": [
+                {
+                    "filename": "heloc_dataset_v1.csv",
+                    "path": "fico-heloc/raw/heloc_dataset_v1.csv",
+                    "size_bytes": 678479,
+                    "rows": 10459,
+                    "columns": 24,
+                    "format": "CSV",
+                    "sha256": "E5A914F742AD7F8472C5417902EC06B321EBC5DE1D68EC13F136D62C87A7FBF3"
+                }
+            ]
+        },
+        {
+            "slug": "give-me-some-credit",
+            "title": "Give Me Some Credit",
+            "source": "Kaggle Competition",
+            "license": "Kaggle Competition Rules",
+            "downloaded": false,
+            "download_command": "kaggle competitions download -c GiveMeSomeCredit -p give-me-some-credit/raw/",
+            "requires_credentials": true,
+            "credential_vars": [
+                "KAGGLE_USERNAME",
+                "KAGGLE_KEY"
+            ],
+            "expected_files": [
+                {
+                    "filename": "cs-training.csv",
+                    "rows": 150000,
+                    "columns": 11,
+                    "format": "CSV"
+                }
+            ]
+        },
+        {
+            "slug": "home-credit-default-risk",
+            "title": "Home Credit Default Risk",
+            "source": "Kaggle Competition",
+            "license": "Kaggle Competition Rules",
+            "downloaded": false,
+            "download_command": "kaggle competitions download -c home-credit-default-risk -p home-credit-default-risk/raw/",
+            "requires_credentials": true,
+            "credential_vars": [
+                "KAGGLE_USERNAME",
+                "KAGGLE_KEY"
+            ],
+            "expected_files": [
+                {
+                    "filename": "application_train.csv",
+                    "rows": 307511,
+                    "columns": 122,
+                    "format": "CSV"
+                }
+            ]
+        },
+        {
+            "slug": "lendingclub-loans",
+            "title": "Lending Club Loans 2007-2020",
+            "source": "Kaggle",
+            "license": "CC0 Public Domain",
+            "downloaded": false,
+            "download_command": "kaggle datasets download -d ethon0426/lending-club-20072020q1 -p lendingclub-loans/raw/",
+            "requires_credentials": true,
+            "credential_vars": [
+                "KAGGLE_USERNAME",
+                "KAGGLE_KEY"
+            ],
+            "expected_files": [
+                {
+                    "filename": "accepted_2007_to_2018Q4.csv.gz",
+                    "rows": 2900000,
+                    "columns": 151,
+                    "format": "compressed CSV"
+                }
+            ]
+        }
+    ]
+}
